@@ -23,7 +23,7 @@ s64 write(u32 fd, u8 *buf, u64 count) {
     return rv;
 }
 
-s32 open(const u8 *path, s32 flags, u64 mode) {
+s32 open(const u8 *path, open_flags flags, u32 permissions) {
     register s32 rv;
     asm volatile (
         "syscall" 
@@ -45,7 +45,7 @@ s32 close(s32 file_descriptor) {
     return rv;
 }
 
-void *mmap(void *addr, u64 len, s32 prot, s32 flags, s32 file_descriptor, s64 offset)  {
+void *mmap(void *addr, u64 len, s32 prot, mmap_flags flags, s32 file_descriptor, s64 offset)  {
     register void *rv;
     register s32 r10 asm ("r10") = flags;    // 4th argument: flags (32-bit)
     register s32 r8 asm ("r8") = file_descriptor;  // 5th argument: fd (32-bit)
@@ -70,7 +70,7 @@ s32 munmap(void *addr, u64 len) {
     return rv;
 }
 
-void *mremap(void *old_addr, u64 old_len, u64 new_len, u64 flags, ...) {
+void *mremap(void *old_addr, u64 old_len, u64 new_len, mremap_flags flags, ...) {
     register void *rv;
     register u64 r10 asm("r10") = flags;
     asm volatile (
